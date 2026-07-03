@@ -6,10 +6,8 @@ const {
   getMessages,
 } = require("../controllers/contactController");
 
-// POST message
 router.post("/", sendMessage);
 
-// GET messages (admin)
 router.get("/", getMessages);
 
 module.exports = router;

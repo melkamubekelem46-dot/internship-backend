@@ -8,16 +8,12 @@ const {
   deletePosition,
 } = require("../controllers/positionController");
 
-// GET all positions
 router.get("/", getPositions);
 
-// CREATE position
 router.post("/", createPosition);
 
-// UPDATE position
 router.put("/:id", updatePosition);
 
-// DELETE position
 router.delete("/:id", deletePosition);
 
 module.exports = router;

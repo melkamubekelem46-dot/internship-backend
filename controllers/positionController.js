@@ -1,6 +1,6 @@
 const db = require("../db");
 
-// GET all positions
+
 const getPositions = (req, res) => {
   const sql = "SELECT * FROM positions ORDER BY id DESC";
 
@@ -13,7 +13,7 @@ const getPositions = (req, res) => {
   });
 };
 
-// CREATE position
+
 const createPosition = (req, res) => {
   const { title, department, slots, description } = req.body;
 
@@ -28,7 +28,7 @@ const createPosition = (req, res) => {
     res.json({ success: true, id: result.insertId });
   });
 };
-// UPDATE position
+
 const updatePosition = (req, res) => {
   const { id } = req.params;
   const { title, department, slots, description } = req.body;
@@ -54,7 +54,7 @@ const updatePosition = (req, res) => {
     }
   );
 };
-// DELETE position
+
 const deletePosition = (req, res) => {
   const { id } = req.params;
 

@@ -3,7 +3,7 @@ const db = require("../db");
 const sendMessage = (req, res) => {
   const { name, email, subject, message } = req.body;
 
-  // FIXED: Wrapped the SQL string in backticks (template literals)
+  
   const sql = `
     INSERT INTO contacts (name, email, subject, message)
     VALUES (?, ?, ?, ?)
