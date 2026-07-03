@@ -1,0 +1,27 @@
+const db = require("../db");
+const bcrypt = require("bcrypt");
+
+const createAdmin = async (username, password, role = "admin") => {
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // FIXED: Wrapped the SQL string in backticks (template literals)
+    const sql = `
+      INSERT INTO admins (username, password, role)
+      VALUES (?, ?, ?)
+    `;
+
+    db.query(sql, [username, hashedPassword, role], (err, result) => {
+      if (err) {
+        console.log("Error creating admin:", err);
+        return;
+      }
+      console.log("Admin created successfully:", result.insertId);
+    });
+
+  } catch (error) {
+    console.log("Hash error:", error);
+  }
+};
+
+module.exports = createAdmin;
