@@ -3,7 +3,6 @@ const db = require("../db");
 const sendMessage = (req, res) => {
   const { name, email, subject, message } = req.body;
 
-  
   const sql = `
     INSERT INTO contacts (name, email, subject, message)
     VALUES (?, ?, ?, ?)
@@ -27,11 +26,93 @@ const sendMessage = (req, res) => {
 };
 
 const getMessages = (req, res) => {
-  db.query("SELECT * FROM contacts ORDER BY id DESC", (err, results) => {
-    if (err) return res.status(500).json({ success: false, error: err });
+  const sql = "SELECT * FROM contacts ORDER BY id DESC";
 
-    res.json({ success: true, data: results });
+  db.query(sql, (err, results) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        message: "Database error",
+        error: err
+      });
+    }
+
+    res.json({
+      success: true,
+      data: results
+    });
   });
 };
 
-module.exports = { sendMessage, getMessages };
+const markAsRead = (req, res) => {
+  const { id } = req.params;
+
+  const sql = "UPDATE contacts SET isRead = 1 WHERE id = ?";
+
+  db.query(sql, [id], (err) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        message: "Database error",
+        error: err
+      });
+    }
+    res.json({
+      success: true,
+      message: "Message marked as read"
+    });
+  });
+};
+
+const deleteMessage = (req, res) => {
+  const { id } = req.params;
+
+  const sql = "DELETE FROM contacts WHERE id = ?";
+
+  db.query(sql, [id], (err) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        message: "Database error",
+        error: err
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Message deleted"
+    });
+  });
+};
+const replyMessage = (req, res) => {
+  const { id } = req.params;
+  const { reply } = req.body;
+
+  const sql = `
+    UPDATE contacts
+    SET reply = ?, repliedAt = NOW()
+    WHERE id = ?
+  `;
+
+  db.query(sql, [reply, id], (err) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        message: "Database error",
+        error: err
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Reply sent successfully"
+    });
+  });
+};
+module.exports = {
+  sendMessage,
+  getMessages,
+  markAsRead,
+  deleteMessage,
+  replyMessage
+};

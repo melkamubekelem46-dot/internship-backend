@@ -1,22 +1,29 @@
 require("dotenv").config();
-const db = require("./db");
 const express = require("express");
-const applicationRoutes = require("./routes/applicationRoutes");
-const positionRoutes = require("./routes/positionRoutes");
-const adminRoutes = require("./routes/adminRoutes");
-const contactRoutes = require("./routes/contactRoutes");
-
 const cors = require("cors");
-require("dotenv").config();
-
 const app = express();
 
-app.use(cors());
+
+const applicationRoutes = require("./routes/applicationRoutes");
+
+const adminRoutes = require("./routes/adminRoutes");
+const contactRoutes = require("./routes/contactRoutes");
+const path = require("path");
+
+ app.use(cors({
+  origin: "http://localhost:5173",
+   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+   allowedHeaders: ["Content-Type", "Authorization"]
+ }));
+
 app.use(express.json());
-app.use("/api/contact", contactRoutes);
-app.use("/api/positions", positionRoutes);
+
+app.use("/api/messages", contactRoutes);
+
 app.use("/api/admin", adminRoutes);
 app.use("/api/applications", applicationRoutes);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 app.get("/", (req, res) => {
   res.send("Backend is running...");
 });
